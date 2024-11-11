@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP/VPN/PROXY API - IP Address Lookup and Geolocation API</title>
+
+    <!-- Meta Tags for SEO -->
+    <meta name="description" content="Query IP addresses, geolocation, ISP, and risk data using the IPQuery API. Fast and reliable IP address lookup service.">
+    <meta name="keywords" content="IP API, IP address lookup, IP geolocation API, IP query, ISP information, geolocation, IP risk analysis">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Highlight.js for Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>🌐 IP Query API</h1>
+        <p class="intro">A simple and efficient API for IP address lookup, geolocation, and risk assessment.</p>
+
+        <!-- Basic Request -->
+        <section>
+            <h2>Basic Request</h2>
+            <p><code>GET /</code> - Returns your IP address.</p>
+            <pre><code class="http">GET https://api.ipquery.io/</code></pre>
+            <p>Response:</p>
+            <pre><code class="plaintext">1.1.1.1</code></pre>
+        </section>
+
+        <!-- Query Specific IP Address -->
+        <section>
+            <h2>Query Specific IP Address</h2>
+            <p><code>GET /{ip}</code> - Retrieve detailed information about an IP address.</p>
+            <pre><code class="http">GET https://api.ipquery.io/8.8.8.8</code></pre>
+            <p>Response:</p>
+            <pre><code class="json">{
+    "ip": "8.8.8.8",
+    "isp": {
+        "asn": "AS15169",
+        "org": "Google LLC",
+        "isp": "Google LLC"
+    },
+    "location": {
+        "country": "United States",
+        "country_code": "US",
+        "city": "Mountain View",
+        "state": "California",
+        "zipcode": "94039",
+        "latitude": 37.3865159981334,
+        "longitude": -122.0838799087185,
+        "timezone": "America/New_York",
+        "localtime": "2024-11-11T13:25:29"
+    },
+    "risk": {
+        "is_mobile": true,
+        "is_vpn": false,
+        "is_tor": false,
+        "is_proxy": false,
+        "is_datacenter": false,
+        "risk_score": 0
+    }
+}</code></pre>
+        </section>
+
+        <!-- Bulk Query Multiple IP Addresses -->
+        <section>
+            <h2>Bulk Query Multiple IP Addresses</h2>
+            <p><code>GET /{ip1},{ip2},...</code> - Retrieve information for multiple IP addresses.</p>
+            <pre><code class="http">GET https://api.ipquery.io/8.8.8.8,1.1.1.1</code></pre>
+        </section>
+
+        <!-- Libraries Section -->
+        <h2>Libraries for Using IPQuery API</h2>
+        <section id="libraries">
+            <h3>Python</h3>
+            <pre><code class="python">#pip3 install ipcore
+
+import requests
+response = requests.get("https://api.ipquery.io/8.8.8.8")
+print(response.json())</code></pre>
+
+            <h3>Rust</h3>
+            <pre><code class="rust">//cargo install ipapi
+
+use ipapi::query_ip;
+
+fn main() {
+    let info = query_ip("8.8.8.8").unwrap();
+    println!("{:?}", info);
+}</code></pre>
+
+            <h3>npm (TypeScript/JavaScript)</h3>
+            <pre><code class="typescript">//npm install enrichip
+
+import { queryIP } from 'enrichip';
+
+async function getInfo() {
+    const info = await queryIP('8.8.8.8');
+    console.log(info);
+}</code></pre>
+
+            <h3>Go</h3>
+            <pre><code class="go">//go get github.com/ipqwery/ipapi-go
+
+package main
+
+import (
+    "fmt"
+    "github.com/ipqwery/ipapi-go
+)
+
+func main() {
+    info := ipapi.QueryIP("8.8.8.8")
+    fmt.Println(info)
+}</code></pre>
+        </section>
+    </div>
+</body>
+
+</html>
