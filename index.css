@@ -1,0 +1,81 @@
+/* Global Styles */
+body {
+    font-family: 'Source Code Pro', monospace;
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    background-color: #252526;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #61dafb;
+    margin-bottom: 20px;
+}
+
+.intro {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+    color: #9cdcfe;
+}
+
+h2 {
+    color: #569cd6;
+    margin-top: 40px;
+}
+
+h3 {
+    color: #989898;
+    margin-top: 30px;
+}
+
+p {
+    margin-bottom: 15px;
+}
+
+pre {
+    background-color: #1e1e1e;
+    border: 1px solid #3c3c3c;
+    padding: 15px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+code {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.9rem;
+    color: #ce9178;
+}
+
+a {
+    color: #61dafb;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Code Block Styling */
+pre code {
+    color: #dcdcdc;
+}
+
+/* Highlight.js Overrides */
+.hljs {
+    background: #1e1e1e;
+    color: #d4d4d4;
+}
