@@ -1,129 +1,781 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IP/VPN/PROXY API - IP Address Lookup and Geolocation API</title>
+    <meta name="description" content="IPQuery provides a straightforward, no-nonsense IP intelligence API for developers. Free tier available, no API key required.">
+    <meta property="og:title" content="ipquery - IP Intelligence Infrastructure">
+    <meta property="og:description" content="Straightforward, no-nonsense IP address data for developers. Open access, bulk queries, and multiple formats.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ipquery.io">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>ipquery - IP Intelligence Infrastructure</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap');
 
-    <!-- Meta Tags for SEO -->
-    <meta name="description" content="Query IP addresses, geolocation, ISP, and risk data using the IPQuery API. Fast and reliable IP address lookup service.">
-    <meta name="keywords" content="IP API, IP address lookup, IP geolocation API, IP query, ISP information, geolocation, IP risk analysis">
+        :root {
+            --bg-color: #050505;
+        }
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap" rel="stylesheet">
+        body {
+            background-color: var(--bg-color);
+            color: #e5e5e5;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
 
-    <!-- Highlight.js for Syntax Highlighting -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
-    <script>hljs.highlightAll();</script>
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="index.css">
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #262626;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #404040;
+        }
+
+        ::selection {
+            background-color: rgba(239, 68, 68, 0.3);
+            color: white;
+        }
+        
+        /* Utility for hiding scrollbar but allowing scroll */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        red: {
+                            400: '#f87171',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                            900: '#7f1d1d',
+                        },
+                        orange: {
+                            400: '#fb923c',
+                            600: '#ea580c',
+                        },
+                        emerald: {
+                            400: '#34d399',
+                            500: '#10b981',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 </head>
+<body class="bg-[#050505] text-neutral-200">
 
-<body>
-    <div class="container">
-        <h1>🌐 IP Query API</h1>
-        <p class="intro">A simple and efficient API for IP address lookup, geolocation, and risk assessment.</p>
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 bg-[#050505] border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-5 h-5 bg-red-600 flex items-center justify-center rounded-sm">
+                        <div class="w-2 h-2 bg-white rounded-[1px]"></div>
+                    </div>
+                    <span class="font-mono font-bold text-white tracking-tight text-lg">ipquery</span>
+                </div>
+                
+                <div class="h-4 w-[1px] bg-white/10 hidden sm:block"></div>
+                
+                <div class="hidden sm:flex items-center gap-2 text-xs font-mono text-neutral-500">
+                    <span class="hover:text-neutral-300 transition-colors cursor-pointer">docs</span>
+                    <span class="text-neutral-800">/</span>
+                    <span class="text-neutral-300">api-reference</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-6">
+                <div class="hidden md:flex items-center gap-6">
+                    <a href="#integration" class="text-neutral-500 hover:text-white font-mono text-xs transition-colors">Integration</a>
+                    <a href="#endpoints" class="text-neutral-500 hover:text-white font-mono text-xs transition-colors">Endpoints</a>
+                    <a href="#faq" class="text-neutral-500 hover:text-white font-mono text-xs transition-colors">FAQ</a>
+                </div>
+                
+                <div class="h-4 w-[1px] bg-white/10 hidden md:block"></div>
+                
+                <div class="flex items-center gap-4">
+                    <div class="hidden sm:flex items-center gap-2 px-2 py-1 bg-white/5 border border-white/10 rounded-sm">
+                        <span class="relative flex h-1.5 w-1.5">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                        </span>
+                        <span class="text-[10px] font-mono text-neutral-400">v2.4.0</span>
+                    </div>
 
-        <!-- Basic Request -->
-        <section>
-            <h2>Basic Request</h2>
-            <p><code>GET /</code> - Returns your IP address.</p>
-            <pre><code class="http">GET https://api.ipquery.io/</code></pre>
-            <p>Response:</p>
-            <pre><code class="plaintext">1.1.1.1</code></pre>
-        </section>
+                    <div class="hidden lg:flex items-center gap-1.5 px-2 py-1 bg-[#0a0a0a] border border-white/10 rounded-sm">
+                        <i data-lucide="command" class="w-3 h-3 text-neutral-600"></i>
+                        <span class="text-[10px] font-mono text-neutral-600">K</span>
+                    </div>
+                    
+                    <a href="https://github.com/ipqwery" class="text-neutral-500 hover:text-white transition-colors">
+                        <i data-lucide="github" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-        <!-- Query Specific IP Address -->
-        <section>
-            <h2>Query Specific IP Address</h2>
-            <p><code>GET /{ip}</code> - Retrieve detailed information about an IP address.</p>
-            <pre><code class="http">GET https://api.ipquery.io/8.8.8.8</code></pre>
-            <p>Response:</p>
-            <pre><code class="json">{
-    "ip": "8.8.8.8",
-    "isp": {
-        "asn": "AS15169",
-        "org": "Google LLC",
-        "isp": "Google LLC"
-    },
-    "location": {
-        "country": "United States",
-        "country_code": "US",
-        "city": "Mountain View",
-        "state": "California",
-        "zipcode": "94039",
-        "latitude": 37.3865159981334,
-        "longitude": -122.0838799087185,
-        "timezone": "America/New_York",
-        "localtime": "2024-11-11T13:25:29"
-    },
-    "risk": {
-        "is_mobile": true,
-        "is_vpn": false,
-        "is_tor": false,
-        "is_proxy": false,
-        "is_datacenter": false,
-        "risk_score": 0
-    }
-}</code></pre>
-        </section>
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-24 overflow-hidden border-b border-white/5 bg-[#050505]">
+        <!-- Brand Gradients -->
+        <div class="absolute top-0 right-0 -mr-40 -mt-40 w-[600px] h-[600px] bg-red-600/5 rounded-full blur-[120px] -z-10"></div>
+        <div class="absolute bottom-0 left-0 -ml-40 -mb-40 w-[500px] h-[500px] bg-orange-600/5 rounded-full blur-[120px] -z-10"></div>
 
-        <!-- Bulk Query Multiple IP Addresses -->
-        <section>
-            <h2>Bulk Query Multiple IP Addresses</h2>
-            <p><code>GET /{ip1},{ip2},...</code> - Retrieve information for multiple IP addresses.</p>
-            <pre><code class="http">GET https://api.ipquery.io/8.8.8.8,1.1.1.1</code></pre>
-        </section>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            <div class="space-y-8">
+                <div class="space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 bg-red-500/10 border border-red-500/20 rounded-sm">
+                        <span class="relative flex h-1.5 w-1.5">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                        </span>
+                        <span class="text-[10px] font-mono font-bold text-red-400 uppercase tracking-wider">System Operational</span>
+                    </div>
+                    
+                    <h1 class="text-5xl sm:text-6xl lg:text-7xl font-bold text-white tracking-tight leading-[1.1]">
+                        IP Intelligence <br/>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-400">
+                            Infrastructure
+                        </span>
+                    </h1>
+                    
+                    <p class="text-lg text-neutral-400 max-w-lg font-light leading-relaxed">
+                        Straightforward, no-nonsense IP address data. <span class="text-white">Open to everyone.</span> Supports bulk queries, XML, YAML and JSON.
+                    </p>
+                </div>
 
-        <!-- Libraries Section -->
-        <h2>Libraries for Using IPQuery API</h2>
-        <section id="libraries">
-            <h3>Python</h3>
-            <pre><code class="python">#pip3 install ipcore
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                    <a href="#docs" class="h-12 px-8 bg-white text-black text-sm font-bold flex items-center justify-center hover:bg-neutral-200 transition-colors rounded-sm">
+                        Start Integration
+                    </a>
+                    <div class="h-12 px-6 flex items-center justify-center bg-white/5 border border-white/10 text-neutral-400 font-mono text-sm rounded-sm whitespace-nowrap overflow-hidden hover:bg-white/10 transition-colors cursor-text group">
+                        <span class="text-red-400 mr-2">$</span> curl api.ipquery.io
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-6 text-xs font-mono text-neutral-500">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="check" class="w-3 h-3 text-red-500"></i> No API Key Required
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="check" class="w-3 h-3 text-red-500"></i> Unlimited Free Tier
+                    </div>
+                </div>
+            </div>
 
-import requests
-response = requests.get("https://api.ipquery.io/8.8.8.8")
-print(response.json())</code></pre>
+            <div class="relative w-full">
+                <div class="relative rounded-sm border border-white/10 bg-[#0a0a0a] shadow-2xl overflow-hidden backdrop-blur-xl">
+                    <div class="flex items-center justify-between px-4 py-2 border-b border-white/5 bg-white/[0.02]">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="terminal" class="w-4 h-4 text-red-500"></i>
+                            <span class="font-mono text-xs text-neutral-400" id="hero-url">
+                                api.ipquery.io/1.1.1.1
+                            </span>
+                        </div>
+                        
+                        <div class="relative">
+                            <button id="format-dropdown-btn" class="flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded-sm text-xs font-mono text-neutral-300 hover:text-white transition-colors hover:bg-white/10">
+                                <span id="current-format-label">JSON</span>
+                                <i data-lucide="chevron-down" class="w-3 h-3"></i>
+                            </button>
+                            
+                            <div id="format-dropdown-menu" class="hidden absolute right-0 top-full mt-2 w-32 bg-[#111] border border-white/10 rounded-sm shadow-xl z-20 py-1">
+                                <button class="format-option w-full text-left px-4 py-2 text-xs font-mono transition-colors text-neutral-500 hover:text-white hover:bg-white/5" data-format="json">JSON</button>
+                                <button class="format-option w-full text-left px-4 py-2 text-xs font-mono transition-colors text-neutral-500 hover:text-white hover:bg-white/5" data-format="xml">XML</button>
+                                <button class="format-option w-full text-left px-4 py-2 text-xs font-mono transition-colors text-neutral-500 hover:text-white hover:bg-white/5" data-format="yaml">YAML</button>
+                                <button class="format-option w-full text-left px-4 py-2 text-xs font-mono transition-colors text-neutral-500 hover:text-white hover:bg-white/5" data-format="text">TEXT</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 overflow-auto custom-scrollbar min-h-[360px] max-h-[500px] bg-[#080808]">
+                        <div id="hero-response" class="font-mono text-xs sm:text-sm"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-            <h3>Rust</h3>
-            <pre><code class="rust">//cargo install ipapi
+    <!-- Integration Section -->
+    <section id="integration" class="py-24 bg-[#0a0a0a] border-b border-white/5 relative overflow-hidden">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-red-500/50 to-transparent"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-16">
+            <div>
+                <h2 class="text-3xl font-bold text-white mb-6">Drop-in Integration</h2>
+                <p class="text-neutral-400 mb-8 font-light text-lg">
+                    Compatible with any stack that speaks HTTP. No SDKs, no bloat. Copy, paste, and ship.
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="lang-buttons">
+                    <!-- Buttons injected via JS -->
+                </div>
+            </div>
+            
+            <div class="min-w-0">
+                <div class="group relative bg-[#0a0a0a] border border-white/10 rounded-sm overflow-hidden w-full max-w-full">
+                    <div class="flex items-center justify-between px-4 py-2 border-b border-white/5 bg-white/[0.02]">
+                        <div class="flex items-center gap-3">
+                           <span class="font-mono text-xs text-neutral-500 uppercase tracking-wider" id="integration-filename">example.js</span>
+                        </div>
+                        <button class="copy-btn text-neutral-500 hover:text-white transition-colors" data-target="integration-code">
+                             <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+                    <div class="p-4 overflow-x-auto custom-scrollbar bg-[#080808]">
+                        <pre class="font-mono text-xs sm:text-sm text-neutral-300 leading-relaxed"><code id="integration-code"></code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-use ipapi::query_ip;
+    <!-- Documentation Section -->
+    <section id="docs" class="py-24 bg-[#050505]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="grid lg:grid-cols-4 gap-12">
+                
+                <!-- Sidebar Navigation -->
+                <div class="hidden lg:block lg:col-span-1 space-y-8 sticky top-32 h-fit">
+                    <div class="space-y-1" id="docs-nav">
+                        <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-6 opacity-50">Docs Navigation</h4>
+                        <a href="#endpoints" class="docs-link block text-sm font-medium border-l-2 pl-4 py-2 transition-all duration-200 border-transparent text-neutral-500 hover:text-white hover:border-white/10">Endpoints</a>
+                        <a href="#dictionary" class="docs-link block text-sm font-medium border-l-2 pl-4 py-2 transition-all duration-200 border-transparent text-neutral-500 hover:text-white hover:border-white/10">Data Dictionary</a>
+                        <a href="#errors" class="docs-link block text-sm font-medium border-l-2 pl-4 py-2 transition-all duration-200 border-transparent text-neutral-500 hover:text-white hover:border-white/10">Errors</a>
+                        <a href="#faq" class="docs-link block text-sm font-medium border-l-2 pl-4 py-2 transition-all duration-200 border-transparent text-neutral-500 hover:text-white hover:border-white/10">FAQ</a>
+                    </div>
+                </div>
 
-fn main() {
-    let info = query_ip("8.8.8.8").unwrap();
-    println!("{:?}", info);
-}</code></pre>
+                <!-- Main Content -->
+                <div class="lg:col-span-3 space-y-24">
+                    
+                    <!-- Endpoints Section -->
+                    <div id="endpoints" class="scroll-mt-32">
+                        <div class="mb-10">
+                            <h2 class="text-3xl font-bold text-white mb-4">API Endpoints</h2>
+                            <div class="h-1 w-12 bg-red-500 rounded-full mb-6"></div>
+                            <p class="text-neutral-400 font-light text-lg">
+                                Base URL: <code class="text-red-300 bg-red-900/20 px-2 py-1 rounded-sm border border-red-500/20">https://api.ipquery.io</code>
+                            </p>
+                        </div>
 
-            <h3>npm (TypeScript/JavaScript)</h3>
-            <pre><code class="typescript">//npm install enrichip
+                        <!-- Endpoint 1 -->
+                        <div class="endpoint-card border border-white/10 bg-[#0a0a0a] rounded-sm overflow-hidden mb-8 w-full group transition-all duration-300 hover:border-white/20">
+                            <div class="p-6 border-b border-white/5">
+                                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                                    <div class="flex items-center gap-3">
+                                        <span class="px-2.5 py-1 bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-mono font-bold rounded-sm">GET</span>
+                                        <code class="text-white font-mono text-sm break-all">/</code>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-xs font-mono text-neutral-500 uppercase mr-2 hidden sm:inline">Format:</span>
+                                        <div class="flex bg-black border border-white/10 rounded-sm p-0.5 endpoint-format-selector" data-target="endpoint-1">
+                                            <button class="px-2 py-0.5 text-[10px] font-mono uppercase transition-colors rounded-sm bg-neutral-800 text-white shadow-sm" data-fmt="json">json</button>
+                                            <button class="px-2 py-0.5 text-[10px] font-mono uppercase transition-colors rounded-sm text-neutral-500 hover:text-neutral-300" data-fmt="xml">xml</button>
+                                            <button class="px-2 py-0.5 text-[10px] font-mono uppercase transition-colors rounded-sm text-neutral-500 hover:text-neutral-300" data-fmt="yaml">yaml</button>
+                                            <button class="px-2 py-0.5 text-[10px] font-mono uppercase transition-colors rounded-sm text-neutral-500 hover:text-neutral-300" data-fmt="text">text</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-neutral-400 text-sm font-light leading-relaxed">Returns your current IP address. If no specific format is requested, this endpoint defaults to returning plain text.</p>
+                            </div>
+                            <div class="bg-[#050505]">
+                                <div class="flex border-b border-white/5 endpoint-tabs" data-target="endpoint-1">
+                                    <button class="flex-1 sm:flex-none px-6 py-3 text-xs font-bold font-mono uppercase border-r border-white/5 transition-colors text-white bg-white/[0.02]" data-tab="request">Request Example</button>
+                                    <button class="flex-1 sm:flex-none px-6 py-3 text-xs font-bold font-mono uppercase transition-colors text-neutral-500 hover:text-neutral-300" data-tab="response">Response Preview</button>
+                                </div>
+                                <div class="p-6 overflow-x-auto min-h-[160px] bg-[#0a0a0a]">
+                                    <div class="endpoint-content" id="endpoint-1-content">
+                                        <!-- Content injected via JS -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-import { queryIP } from 'enrichip';
+                        <!-- Endpoint 2 -->
+                         <div class="endpoint-card border border-white/10 bg-[#0a0a0a] rounded-sm overflow-hidden mb-8 w-full group transition-all duration-300 hover:border-white/20">
+                            <div class="p-6 border-b border-white/5">
+                                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                                    <div class="flex items-center gap-3">
+                                        <span class="px-2.5 py-1 bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-mono font-bold rounded-sm">GET</span>
+                                        <code class="text-white font-mono text-sm break-all">/{ip}</code>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-xs font-mono text-neutral-500 uppercase mr-2 hidden sm:inline">Format:</span>
+                                        <div class="flex bg-black border border-white/10 rounded-sm p-0.5 endpoint-format-selector" data-target="endpoint-2">
+                                            <button class="px-2 py-0.5 text-[10px] font-mono uppercase transition-colors rounded-sm bg-neutral-800 text-white shadow-sm" data-fmt="json">json</button>
+                                            <button class="px-2 py-0.5 text-[10px] font-mono uppercase transition-colors rounded-sm text-neutral-500 hover:text-neutral-300" data-fmt="xml">xml</button>
+                                            <button class="px-2 py-0.5 text-[10px] font-mono uppercase transition-colors rounded-sm text-neutral-500 hover:text-neutral-300" data-fmt="yaml">yaml</button>
+                                            <button class="px-2 py-0.5 text-[10px] font-mono uppercase transition-colors rounded-sm text-neutral-500 hover:text-neutral-300" data-fmt="text">text</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-neutral-400 text-sm font-light leading-relaxed">Returns full intelligence data for a specific IP address including location, ISP, and risk scoring.</p>
+                            </div>
+                            <div class="bg-[#050505]">
+                                <div class="flex border-b border-white/5 endpoint-tabs" data-target="endpoint-2">
+                                    <button class="flex-1 sm:flex-none px-6 py-3 text-xs font-bold font-mono uppercase border-r border-white/5 transition-colors text-white bg-white/[0.02]" data-tab="request">Request Example</button>
+                                    <button class="flex-1 sm:flex-none px-6 py-3 text-xs font-bold font-mono uppercase transition-colors text-neutral-500 hover:text-neutral-300" data-tab="response">Response Preview</button>
+                                </div>
+                                <div class="p-6 overflow-x-auto min-h-[160px] bg-[#0a0a0a]">
+                                    <div class="endpoint-content" id="endpoint-2-content">
+                                        <!-- Content injected via JS -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-async function getInfo() {
-    const info = await queryIP('8.8.8.8');
-    console.log(info);
-}</code></pre>
+                         <!-- Endpoint 3 -->
+                         <div class="endpoint-card border border-white/10 bg-[#0a0a0a] rounded-sm overflow-hidden mb-8 w-full group transition-all duration-300 hover:border-white/20">
+                            <div class="p-6 border-b border-white/5">
+                                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                                    <div class="flex items-center gap-3">
+                                        <span class="px-2.5 py-1 bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-mono font-bold rounded-sm">GET</span>
+                                        <code class="text-white font-mono text-sm break-all">/{ip},{ip}...</code>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-xs font-mono text-neutral-500 uppercase mr-2 hidden sm:inline">Format:</span>
+                                        <div class="flex bg-black border border-white/10 rounded-sm p-0.5 endpoint-format-selector" data-target="endpoint-3">
+                                            <button class="px-2 py-0.5 text-[10px] font-mono uppercase transition-colors rounded-sm bg-neutral-800 text-white shadow-sm" data-fmt="json">json</button>
+                                            <button class="px-2 py-0.5 text-[10px] font-mono uppercase transition-colors rounded-sm text-neutral-500 hover:text-neutral-300" data-fmt="xml">xml</button>
+                                            <button class="px-2 py-0.5 text-[10px] font-mono uppercase transition-colors rounded-sm text-neutral-500 hover:text-neutral-300" data-fmt="yaml">yaml</button>
+                                            <button class="px-2 py-0.5 text-[10px] font-mono uppercase transition-colors rounded-sm text-neutral-500 hover:text-neutral-300" data-fmt="text">text</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-neutral-400 text-sm font-light leading-relaxed">Bulk query multiple IP addresses in a single request. Comma separated. Results are returned as a list.</p>
+                                <div class="mt-4 p-3 bg-blue-500/5 border border-blue-500/10 rounded-sm flex items-start gap-3">
+                                    <i data-lucide="alert-circle" class="w-4 h-4 text-blue-400 shrink-0 mt-0.5"></i>
+                                    <p class="text-blue-300/80 text-xs font-mono leading-relaxed">
+                                        Batch limit: 10,000 IPs per request. Results are returned in order.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="bg-[#050505]">
+                                <div class="flex border-b border-white/5 endpoint-tabs" data-target="endpoint-3">
+                                    <button class="flex-1 sm:flex-none px-6 py-3 text-xs font-bold font-mono uppercase border-r border-white/5 transition-colors text-white bg-white/[0.02]" data-tab="request">Request Example</button>
+                                    <button class="flex-1 sm:flex-none px-6 py-3 text-xs font-bold font-mono uppercase transition-colors text-neutral-500 hover:text-neutral-300" data-tab="response">Response Preview</button>
+                                </div>
+                                <div class="p-6 overflow-x-auto min-h-[160px] bg-[#0a0a0a]">
+                                    <div class="endpoint-content" id="endpoint-3-content">
+                                        <!-- Content injected via JS -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-            <h3>Go</h3>
-            <pre><code class="go">//go get github.com/ipqwery/ipapi-go
+                    </div>
 
-package main
+                    <!-- Data Dictionary -->
+                    <div id="dictionary" class="scroll-mt-32">
+                        <div class="flex items-center gap-3 mb-8">
+                            <i data-lucide="database" class="w-6 h-6 text-red-500"></i>
+                            <h2 class="text-2xl font-bold text-white">Data Dictionary</h2>
+                        </div>
+                        
+                        <div class="grid gap-8">
+                            <div class="border border-white/10 bg-[#0a0a0a] rounded-sm overflow-hidden shadow-lg">
+                                <div class="px-6 py-4 border-b border-white/5 bg-white/[0.02] flex items-center gap-2">
+                                    <i data-lucide="globe" class="w-4 h-4 text-red-400"></i>
+                                    <span class="text-xs font-bold text-white font-mono uppercase tracking-wider">Location Object</span>
+                                </div>
+                                <div class="p-6 overflow-x-auto">
+                                    <table class="w-full text-left">
+                                        <tbody class="divide-y divide-white/5">
+                                            <tr><td class="py-4 pr-4 font-mono text-sm text-red-400">country</td><td class="py-4 pr-4 font-mono text-xs text-neutral-500 uppercase">String</td><td class="py-4 text-sm text-neutral-400 font-light">Full name of the country.</td></tr>
+                                            <tr><td class="py-4 pr-4 font-mono text-sm text-red-400">country_code</td><td class="py-4 pr-4 font-mono text-xs text-neutral-500 uppercase">String</td><td class="py-4 text-sm text-neutral-400 font-light">Two-letter ISO 3166-1 alpha-2 country code.</td></tr>
+                                            <tr><td class="py-4 pr-4 font-mono text-sm text-red-400">city</td><td class="py-4 pr-4 font-mono text-xs text-neutral-500 uppercase">String</td><td class="py-4 text-sm text-neutral-400 font-light">City name.</td></tr>
+                                            <tr><td class="py-4 pr-4 font-mono text-sm text-red-400">state</td><td class="py-4 pr-4 font-mono text-xs text-neutral-500 uppercase">String</td><td class="py-4 text-sm text-neutral-400 font-light">Region or state name.</td></tr>
+                                            <tr><td class="py-4 pr-4 font-mono text-sm text-red-400">zipcode</td><td class="py-4 pr-4 font-mono text-xs text-neutral-500 uppercase">String</td><td class="py-4 text-sm text-neutral-400 font-light">Postal code.</td></tr>
+                                            <tr><td class="py-4 pr-4 font-mono text-sm text-red-400">timezone</td><td class="py-4 pr-4 font-mono text-xs text-neutral-500 uppercase">String</td><td class="py-4 text-sm text-neutral-400 font-light">Timezone identifier.</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
 
-import (
-    "fmt"
-    "github.com/ipqwery/ipapi-go
-)
+                            <div class="border border-white/10 bg-[#0a0a0a] rounded-sm overflow-hidden shadow-lg">
+                                <div class="px-6 py-4 border-b border-white/5 bg-white/[0.02] flex items-center gap-2">
+                                    <i data-lucide="lock" class="w-4 h-4 text-red-400"></i>
+                                    <span class="text-xs font-bold text-white font-mono uppercase tracking-wider">Risk Object</span>
+                                </div>
+                                <div class="p-6 overflow-x-auto">
+                                    <table class="w-full text-left">
+                                        <tbody class="divide-y divide-white/5">
+                                            <tr><td class="py-4 pr-4 font-mono text-sm text-red-400">is_mobile</td><td class="py-4 pr-4 font-mono text-xs text-neutral-500 uppercase">Boolean</td><td class="py-4 text-sm text-neutral-400 font-light">True if associated with cellular network.</td></tr>
+                                            <tr><td class="py-4 pr-4 font-mono text-sm text-red-400">is_vpn</td><td class="py-4 pr-4 font-mono text-xs text-neutral-500 uppercase">Boolean</td><td class="py-4 text-sm text-neutral-400 font-light">True if belongs to a known VPN provider.</td></tr>
+                                            <tr><td class="py-4 pr-4 font-mono text-sm text-red-400">is_tor</td><td class="py-4 pr-4 font-mono text-xs text-neutral-500 uppercase">Boolean</td><td class="py-4 text-sm text-neutral-400 font-light">True if is a known Tor exit node.</td></tr>
+                                            <tr><td class="py-4 pr-4 font-mono text-sm text-red-400">is_proxy</td><td class="py-4 pr-4 font-mono text-xs text-neutral-500 uppercase">Boolean</td><td class="py-4 text-sm text-neutral-400 font-light">True if is a known public proxy.</td></tr>
+                                            <tr><td class="py-4 pr-4 font-mono text-sm text-red-400">risk_score</td><td class="py-4 pr-4 font-mono text-xs text-neutral-500 uppercase">Integer</td><td class="py-4 text-sm text-neutral-400 font-light">0-100 score indicating malicious activity likelihood.</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-func main() {
-    info := ipapi.QueryIP("8.8.8.8")
-    fmt.Println(info)
-}</code></pre>
-        </section>
-    </div>
+                    <!-- Errors Section -->
+                    <div id="errors" class="scroll-mt-32">
+                        <div class="flex items-center gap-3 mb-8">
+                            <i data-lucide="alert-circle" class="w-6 h-6 text-red-400"></i>
+                            <h2 class="text-2xl font-bold text-white">Error Codes</h2>
+                        </div>
+                        <div class="border border-white/10 bg-[#0a0a0a] rounded-sm overflow-hidden shadow-lg">
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left">
+                                    <thead class="bg-white/[0.02]">
+                                        <tr class="border-b border-white/5 text-xs font-mono text-neutral-500 uppercase tracking-wider">
+                                            <th class="py-4 px-6">Code</th>
+                                            <th class="py-4 px-6">Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-sm text-neutral-400 font-mono divide-y divide-white/5">
+                                        <tr class="hover:bg-white/[0.02]">
+                                            <td class="py-4 px-6 text-red-400 font-bold">400</td>
+                                            <td class="py-4 px-6">Bad Request - Invalid IP format or query parameters.</td>
+                                        </tr>
+                                        <tr class="hover:bg-white/[0.02]">
+                                            <td class="py-4 px-6 text-red-400 font-bold">429</td>
+                                            <td class="py-4 px-6">Too Many Requests - You have exceeded the rate limit.</td>
+                                        </tr>
+                                        <tr class="hover:bg-white/[0.02]">
+                                            <td class="py-4 px-6 text-red-400 font-bold">500</td>
+                                            <td class="py-4 px-6">Internal Server Error - Something went wrong on our end.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Section -->
+                    <div id="faq" class="scroll-mt-32 border-t border-white/10 pt-16">
+                        <div class="flex items-center gap-3 mb-10">
+                            <i data-lucide="help-circle" class="w-6 h-6 text-red-500"></i>
+                            <h2 class="text-3xl font-bold text-white">Common Questions</h2>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="group p-6 bg-[#0a0a0a] border border-white/10 rounded-sm hover:border-red-500/30 transition-all duration-300">
+                                <h3 class="text-white font-bold mb-3 flex items-center gap-3">
+                                    <i data-lucide="zap" class="w-5 h-5 text-red-400 group-hover:text-red-300 transition-colors"></i>
+                                    Is this really free?
+                                </h3>
+                                <p class="text-sm text-neutral-400 leading-relaxed group-hover:text-neutral-300 transition-colors">
+                                    Yes. We offer a public, free-tier API that covers most developer use-cases. We believe in open access to basic infrastructure data.
+                                </p>
+                            </div>
+                            
+                            <div class="group p-6 bg-[#0a0a0a] border border-white/10 rounded-sm hover:border-red-500/30 transition-all duration-300">
+                                <h3 class="text-white font-bold mb-3 flex items-center gap-3">
+                                    <i data-lucide="cpu" class="w-5 h-5 text-red-400 group-hover:text-red-300 transition-colors"></i>
+                                    Any external dependencies?
+                                </h3>
+                                <p class="text-sm text-neutral-400 leading-relaxed group-hover:text-neutral-300 transition-colors">
+                                    No. All our data is aggregated and processed on our own infrastructure. You only rely on us, not third-party resolvers.
+                                </p>
+                            </div>
+
+                            <div class="group p-6 bg-[#0a0a0a] border border-white/10 rounded-sm hover:border-red-500/30 transition-all duration-300">
+                                <h3 class="text-white font-bold mb-3 flex items-center gap-3">
+                                    <i data-lucide="server" class="w-5 h-5 text-red-400 group-hover:text-red-300 transition-colors"></i>
+                                    Can I use this for commercial projects?
+                                </h3>
+                                <p class="text-sm text-neutral-400 leading-relaxed group-hover:text-neutral-300 transition-colors">
+                                    Absolutely. You can integrate ipquery into commercial applications, SaaS products, and internal tools without restriction.
+                                </p>
+                            </div>
+
+                            <div class="group p-6 bg-[#0a0a0a] border border-white/10 rounded-sm hover:border-red-500/30 transition-all duration-300">
+                                <h3 class="text-white font-bold mb-3 flex items-center gap-3">
+                                    <i data-lucide="activity" class="w-5 h-5 text-red-400 group-hover:text-red-300 transition-colors"></i>
+                                    Do you log queries?
+                                </h3>
+                                <p class="text-sm text-neutral-400 leading-relaxed group-hover:text-neutral-300 transition-colors">
+                                    We only log transient data for caching and abuse prevention (rate limiting). We do not sell query data to third parties.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#050505] border-t border-white/10 py-12 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row justify-between items-center gap-6 relative z-10">
+            <div class="flex items-center gap-3">
+                <div class="w-4 h-4 bg-red-600 rounded-sm"></div>
+                <span class="font-mono font-bold text-white tracking-tight">ipquery</span>
+            </div>
+            
+            <div class="flex flex-wrap justify-center gap-6 sm:gap-8">
+                <a href="mailto:contact@ipquery.io" class="text-neutral-500 hover:text-white font-mono text-xs uppercase transition-colors">Terms</a>
+                <a href="mailto:contact@ipquery.io" class="text-neutral-500 hover:text-white font-mono text-xs uppercase transition-colors">Privacy</a>
+                <a href="https://status.ipquery.io" class="text-neutral-500 hover:text-white font-mono text-xs uppercase transition-colors">Status</a>
+                <span class="text-neutral-700 font-mono text-xs">© 2024</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // --- Data ---
+        let heroData = {
+            ip: "1.1.1.1",
+            isp: { asn: "AS13335", org: "Cloudflare, Inc.", isp: "Cloudflare, Inc." },
+            location: {
+                country: "Australia", country_code: "AU", city: "Sydney", state: "New South Wales",
+                zipcode: "1001", latitude: -33.8545, longitude: 151.2001,
+                timezone: "Australia/Sydney", localtime: "2024-09-03T22:22:52"
+            },
+            risk: { is_mobile: false, is_vpn: false, is_tor: false, is_proxy: false, is_datacenter: true, risk_score: 0 }
+        };
+
+        const integrationExamples = {
+            node: { name: 'Node.js', ext: 'js', code: `const fetch = require('node-fetch');\n\nconst getIP = async () => {\n  // No API key needed\n  const res = await fetch('https://api.ipquery.io/1.1.1.1');\n  const data = await res.json();\n  console.log(data.location.city);\n};\n\ngetIP();` },
+            python: { name: 'Python', ext: 'py', code: `import requests\n\n# No API key needed\nresponse = requests.get('https://api.ipquery.io/1.1.1.1')\ndata = response.json()\n\nprint(f"User is located in {data['location']['city']}")` },
+            go: { name: 'Go', ext: 'go', code: `package main\n\nimport (\n    "fmt"\n    "net/http"\n    "io/ioutil"\n)\n\nfunc main() {\n    resp, _ := http.Get("https://api.ipquery.io/1.1.1.1")\n    body, _ := ioutil.ReadAll(resp.Body)\n    fmt.Println(string(body))\n}` },
+            java: { name: 'Java', ext: 'java', code: `import java.net.URI;\nimport java.net.http.HttpClient;\nimport java.net.http.HttpRequest;\nimport java.net.http.HttpResponse;\n\npublic class Main {\n    public static void main(String[] args) throws Exception {\n        HttpClient client = HttpClient.newHttpClient();\n        HttpRequest request = HttpRequest.newBuilder()\n                .uri(URI.create("https://api.ipquery.io/1.1.1.1"))\n                .build();\n\n        HttpResponse<String> response = client.send(request,\n                HttpResponse.BodyHandlers.ofString());\n\n        System.out.println(response.body());\n    }\n}` },
+            csharp: { name: 'C#', ext: 'cs', code: `using System;\nusing System.Net.Http;\nusing System.Threading.Tasks;\n\nclass Program {\n    static async Task Main() {\n        using HttpClient client = new HttpClient();\n        string response = await client.GetStringAsync("https://api.ipquery.io/1.1.1.1");\n        Console.WriteLine(response);\n    }\n}` },
+            php: { name: 'PHP', ext: 'php', code: `<?php\n\n$response = file_get_contents("https://api.ipquery.io/1.1.1.1");\n$data = json_decode($response, true);\n\necho "User is in " . $data['location']['city'];\n?>` },
+            ruby: { name: 'Ruby', ext: 'rb', code: `require 'net/http'\nrequire 'json'\n\nurl = URI("https://api.ipquery.io/1.1.1.1")\nresponse = Net::HTTP.get(url)\ndata = JSON.parse(response)\n\nputs data['location']['city']` },
+            rust: { name: 'Rust', ext: 'rs', code: `use std::error::Error;\n\n#[tokio::main]\nasync fn main() -> Result<(), Box<dyn Error>> {\n    let resp = reqwest::get("https://api.ipquery.io/1.1.1.1")\n        .await?\n        .text()\n        .await?;\n    println!("{:#?}", resp);\n    Ok(())\n}` }
+        };
+
+        // --- Helpers ---
+        function highlight(code) {
+             const tokens = [
+                { regex: /"(.*?)"|'(.*?)'/g, class: 'text-emerald-400' },
+                { regex: /\/\/.*$|#.*$/gm, class: 'text-neutral-600 italic' },
+                { regex: /\b(import|from|require|const|let|var|func|package|public|class|static|void|using|namespace|echo|use|fn|mut)\b/g, class: 'text-red-400' },
+                { regex: /\b(async|await|return|if|else|print|fmt|Console|System|WriteLine|println|new|get)\b/g, class: 'text-blue-400' },
+                { regex: /\b(true|false|null|nil)\b/g, class: 'text-orange-400' },
+                { regex: /\b\d+(\.\d+)?\b/g, class: 'text-blue-300' },
+            ];
+            
+            // Simple approach: Split by word boundaries and delimiters, then match
+            // Note: This is a very naive highlighter for demonstration.
+            
+            // For robust highlighting in production without a library, we'd need a parser. 
+            // Here we'll rely on text splitting to apply classes safely.
+            const parts = code.split(/(".*?"|'.*?'|\/\/.*$|#.*$|\b\w+\b|[{}[\],.();])/gm).filter(Boolean);
+            
+            return parts.map(part => {
+                let cls = 'text-neutral-400';
+                if (part.match(/^("|')/)) cls = 'text-emerald-400';
+                else if (part.match(/^(\/\/|#)/)) cls = 'text-neutral-600 italic';
+                else if (['import','from','require','const','let','var','func','package','public','class','static','void','using','namespace','echo','use','fn','mut'].includes(part)) cls = 'text-red-400';
+                else if (['async','await','return','if','else','print','fmt','Console','System','WriteLine','println','new','get'].includes(part)) cls = 'text-blue-400';
+                else if (['true','false','null','nil'].includes(part)) cls = 'text-orange-400';
+                else if (!isNaN(parseFloat(part)) && isFinite(part)) cls = 'text-blue-300';
+                return `<span class="${cls}">${part}</span>`;
+            }).join('');
+        }
+
+        function renderResponse(format, data = heroData) {
+            switch(format) {
+                case 'xml': return `<div class="text-blue-300 whitespace-pre-wrap">&lt;IPInfo&gt;\n  &lt;ip&gt;${data.ip}&lt;/ip&gt;\n  &lt;isp&gt;\n    &lt;asn&gt;${data.isp.asn}&lt;/asn&gt;\n    &lt;org&gt;${data.isp.org}&lt;/org&gt;\n  &lt;/isp&gt;\n  &lt;location&gt;\n    &lt;country&gt;${data.location.country}&lt;/country&gt;\n    &lt;city&gt;${data.location.city}&lt;/city&gt;\n  &lt;/location&gt;\n&lt;/IPInfo&gt;`;
+                case 'yaml': return `<div class="text-yellow-100 whitespace-pre-wrap">ip: <span class="text-emerald-400">${data.ip}</span>\nisp:\n  asn: <span class="text-emerald-400">${data.isp.asn}</span>\n  org: <span class="text-emerald-400">${data.isp.org}</span>\nlocation:\n  country: <span class="text-emerald-400">${data.location.country}</span>\n  city: <span class="text-emerald-400">${data.location.city}</span></div>`;
+                case 'text': return `<div class="text-neutral-300 whitespace-pre-wrap">${data.ip}</div>`;
+                default: 
+                    return `<div class="text-neutral-300 whitespace-pre-wrap leading-relaxed"><span class="text-neutral-600">{</span><br/><div class="pl-6 border-l border-white/5 ml-1"><span class="text-red-400">"ip"</span>: <span class="text-emerald-400">"${data.ip}"</span>,<br/><span class="text-red-400">"isp"</span>: <span class="text-neutral-600">{</span><div class="pl-6 border-l border-white/5 ml-1"><span class="text-red-400">"asn"</span>: <span class="text-emerald-400">"${data.isp.asn}"</span>,<br/><span class="text-red-400">"org"</span>: <span class="text-emerald-400">"${data.isp.org}"</span></div><span class="text-neutral-600">}</span>,<br/><span class="text-red-400">"location"</span>: <span class="text-neutral-600">{</span><div class="pl-6 border-l border-white/5 ml-1"><span class="text-red-400">"country"</span>: <span class="text-emerald-400">"${data.location.country}"</span>,<br/><span class="text-red-400">"city"</span>: <span class="text-emerald-400">"${data.location.city}"</span>,<br/><span class="text-red-400">"timezone"</span>: <span class="text-emerald-400">"${data.location.timezone}"</span></div><span class="text-neutral-600">}</span>,<br/><span class="text-red-400">"risk"</span>: <span class="text-neutral-600">{</span><div class="pl-6 border-l border-white/5 ml-1"><span class="text-red-400">"is_vpn"</span>: <span class="text-orange-400">${data.risk.is_vpn}</span>,<br/><span class="text-red-400">"risk_score"</span>: <span class="text-blue-400">${data.risk.risk_score}</span></div><span class="text-neutral-600">}</span></div><span class="text-neutral-600">}</span></div>`;
+            }
+        }
+
+        function getExampleUrl(endpointType, format) {
+            let base = 'https://api.ipquery.io';
+            let path = '/1.1.1.1';
+            if (endpointType === 'endpoint-1') path = '/'; // Current IP
+            if (endpointType === 'endpoint-3') path = '/1.1.1.1,8.8.8.8'; // Bulk
+            
+            if (format !== 'json') path += `?format=${format}`;
+            return `curl "${base}${path}"`;
+        }
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            lucide.createIcons();
+
+            // 1. Hero Format Dropdown
+            const heroBtn = document.getElementById('format-dropdown-btn');
+            const heroMenu = document.getElementById('format-dropdown-menu');
+            const heroLabel = document.getElementById('current-format-label');
+            const heroResponse = document.getElementById('hero-response');
+            const heroUrl = document.getElementById('hero-url');
+
+            heroBtn.addEventListener('click', () => heroMenu.classList.toggle('hidden'));
+
+            // Initial Hero Render (with Mock)
+            heroResponse.innerHTML = renderResponse('json');
+            
+            // FETCH REAL DATA
+            try {
+                 const res = await fetch("https://api.ipquery.io/?format=json");
+                 if(res.ok) {
+                     const data = await res.json();
+                     heroData = data; // Update the data source
+                     heroResponse.innerHTML = renderResponse('json', heroData); // Re-render
+                     document.getElementById('hero-url').textContent = 'api.ipquery.io'; 
+                 }
+            } catch(e) { console.log("Using mock data"); }
+            
+            document.querySelectorAll('.format-option').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const fmt = e.target.dataset.format;
+                    heroLabel.textContent = fmt.toUpperCase();
+                    heroResponse.innerHTML = renderResponse(fmt);
+                    heroMenu.classList.add('hidden');
+                    
+                    // Update URL based on fetch data availability logic
+                    // If we have fetched data (heroData.ip != 1.1.1.1), show root url
+                    if (heroData.ip !== "1.1.1.1") {
+                         heroUrl.textContent = `api.ipquery.io${fmt !== 'json' ? '?format='+fmt : ''}`;
+                    } else {
+                         heroUrl.textContent = `api.ipquery.io/1.1.1.1${fmt !== 'json' ? '?format='+fmt : ''}`;
+                    }
+                });
+            });
+
+            // 2. Integration Tabs
+            const langButtonsContainer = document.getElementById('lang-buttons');
+            const integrationCode = document.getElementById('integration-code');
+            const integrationFilename = document.getElementById('integration-filename');
+            let currentLang = 'node';
+
+            Object.entries(integrationExamples).forEach(([key, val]) => {
+                const btn = document.createElement('button');
+                btn.className = `lang-btn flex items-center justify-center px-4 py-3 border rounded-sm font-mono text-sm transition-all duration-300 ${key === currentLang ? 'border-red-500/50 text-white bg-red-500/10 shadow-[0_0_15px_rgba(239,68,68,0.1)]' : 'border-white/10 text-neutral-500 hover:border-white/20 hover:text-neutral-300 hover:bg-white/5'}`;
+                btn.textContent = val.name;
+                btn.onclick = () => {
+                    // Update Active State
+                    document.querySelectorAll('.lang-btn').forEach(b => {
+                        b.className = 'lang-btn flex items-center justify-center px-4 py-3 border rounded-sm font-mono text-sm transition-all duration-300 border-white/10 text-neutral-500 hover:border-white/20 hover:text-neutral-300 hover:bg-white/5';
+                    });
+                    btn.className = 'lang-btn flex items-center justify-center px-4 py-3 border rounded-sm font-mono text-sm transition-all duration-300 border-red-500/50 text-white bg-red-500/10 shadow-[0_0_15px_rgba(239,68,68,0.1)]';
+                    
+                    // Update Content
+                    integrationFilename.textContent = `example.${val.ext}`;
+                    integrationCode.innerHTML = highlight(val.code);
+                    currentLang = key;
+                };
+                langButtonsContainer.appendChild(btn);
+            });
+            // Init Integration
+            integrationCode.innerHTML = highlight(integrationExamples.node.code);
+
+            // 3. Documentation Scroll Spy
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.id;
+                        document.querySelectorAll('.docs-link').forEach(link => {
+                            const href = link.getAttribute('href').substring(1);
+                            if (href === id) {
+                                link.classList.remove('border-transparent', 'text-neutral-500');
+                                link.classList.add('border-red-500', 'text-white', 'bg-white/[0.02]');
+                            } else {
+                                link.classList.add('border-transparent', 'text-neutral-500');
+                                link.classList.remove('border-red-500', 'text-white', 'bg-white/[0.02]');
+                            }
+                        });
+                    }
+                });
+            }, { rootMargin: '-20% 0px -60% 0px' });
+
+            ['endpoints', 'dictionary', 'errors', 'faq'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) observer.observe(el);
+            });
+
+            // 4. Endpoint Tabs & Formats
+            function updateEndpoint(id) {
+                const container = document.querySelector(`.endpoint-card:has(#${id}-content)`); // Note: :has support or use specific ID logic
+                // Using simpler selector logic for vanilla:
+                // We need to store state for each endpoint: activeTab, currentFormat
+                // We can read from DOM attributes
+            }
+
+            // Init Endpoints
+            ['endpoint-1', 'endpoint-2', 'endpoint-3'].forEach(id => {
+                const contentEl = document.getElementById(`${id}-content`);
+                const formatBtns = document.querySelectorAll(`.endpoint-format-selector[data-target="${id}"] button`);
+                const tabBtns = document.querySelectorAll(`.endpoint-tabs[data-target="${id}"] button`);
+                
+                let state = { tab: 'request', format: 'json' };
+
+                function render() {
+                    // Update buttons visuals
+                    formatBtns.forEach(b => {
+                        if(b.dataset.fmt === state.format) {
+                             b.className = "px-2 py-0.5 text-[10px] font-mono uppercase transition-colors rounded-sm bg-neutral-800 text-white shadow-sm";
+                        } else {
+                             b.className = "px-2 py-0.5 text-[10px] font-mono uppercase transition-colors rounded-sm text-neutral-500 hover:text-neutral-300";
+                        }
+                    });
+
+                    tabBtns.forEach(b => {
+                        if(b.dataset.tab === state.tab) {
+                            b.classList.remove('text-neutral-500', 'hover:text-neutral-300');
+                            b.classList.add('text-white', 'bg-white/[0.02]');
+                        } else {
+                            b.classList.add('text-neutral-500', 'hover:text-neutral-300');
+                            b.classList.remove('text-white', 'bg-white/[0.02]');
+                        }
+                    });
+
+                    // Update Content
+                    if (state.tab === 'request') {
+                        const code = getExampleUrl(id, state.format);
+                        contentEl.innerHTML = `<pre class="font-mono text-xs sm:text-sm text-neutral-300 leading-relaxed"><code>${highlight(code)}</code></pre>`;
+                    } else {
+                         contentEl.innerHTML = renderResponse(state.format);
+                    }
+                }
+
+                formatBtns.forEach(b => b.addEventListener('click', () => { state.format = b.dataset.fmt; render(); }));
+                tabBtns.forEach(b => b.addEventListener('click', () => { state.tab = b.dataset.tab; render(); }));
+                
+                render(); // Initial render
+            });
+
+            // 5. Copy Buttons
+            document.querySelectorAll('.copy-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetId = btn.dataset.target;
+                    const text = document.getElementById(targetId).textContent;
+                    navigator.clipboard.writeText(text);
+                    
+                    const icon = btn.querySelector('svg'); // Lucide svg
+                    // We can't easily switch icon inside lucide SVG without re-rendering or swapping elements.
+                    // Simple hack: change color to green temporarily
+                    btn.classList.add('text-emerald-400');
+                    setTimeout(() => btn.classList.remove('text-emerald-400'), 1000);
+                });
+            });
+        });
+    </script>
 </body>
-
 </html>
