@@ -141,8 +141,8 @@
     <!-- Hero Section -->
     <section class="relative pt-32 pb-24 overflow-hidden border-b border-white/5 bg-[#050505]">
         <!-- Brand Gradients -->
-        <div class="absolute top-0 right-0 -mr-40 -mt-40 w-[600px] h-[600px] bg-red-600/5 rounded-full blur-[120px] -z-10"></div>
-        <div class="absolute bottom-0 left-0 -ml-40 -mb-40 w-[500px] h-[500px] bg-orange-600/5 rounded-full blur-[120px] -z-10"></div>
+        <div class="absolute top-0 right-0 -mr-40 -mt-40 w-[600px] h-[600px] bg-red-500/10 rounded-full blur-[130px] -z-10"></div>
+        <div class="absolute bottom-0 left-0 -ml-40 -mb-40 w-[500px] h-[500px] bg-orange-500/10 rounded-full blur-[130px] -z-10"></div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <div class="space-y-8">
@@ -196,17 +196,22 @@
                             </span>
                         </div>
                         
-                        <div class="relative">
-                            <button id="format-dropdown-btn" class="flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded-sm text-xs font-mono text-neutral-300 hover:text-white transition-colors hover:bg-white/10">
-                                <span id="current-format-label">JSON</span>
-                                <i data-lucide="chevron-down" class="w-3 h-3"></i>
+                        <div class="flex items-center gap-2">
+                            <button class="copy-btn text-neutral-500 hover:text-white transition-colors p-1.5 rounded-sm hover:bg-white/5" data-target="hero-response" title="Copy Response">
+                                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
                             </button>
-                            
-                            <div id="format-dropdown-menu" class="hidden absolute right-0 top-full mt-2 w-32 bg-[#111] border border-white/10 rounded-sm shadow-xl z-20 py-1">
-                                <button class="format-option w-full text-left px-4 py-2 text-xs font-mono transition-colors text-neutral-500 hover:text-white hover:bg-white/5" data-format="json">JSON</button>
-                                <button class="format-option w-full text-left px-4 py-2 text-xs font-mono transition-colors text-neutral-500 hover:text-white hover:bg-white/5" data-format="xml">XML</button>
-                                <button class="format-option w-full text-left px-4 py-2 text-xs font-mono transition-colors text-neutral-500 hover:text-white hover:bg-white/5" data-format="yaml">YAML</button>
-                                <button class="format-option w-full text-left px-4 py-2 text-xs font-mono transition-colors text-neutral-500 hover:text-white hover:bg-white/5" data-format="text">TEXT</button>
+                            <div class="relative">
+                                <button id="format-dropdown-btn" class="flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded-sm text-xs font-mono text-neutral-300 hover:text-white transition-colors hover:bg-white/10">
+                                    <span id="current-format-label">JSON</span>
+                                    <i data-lucide="chevron-down" class="w-3 h-3"></i>
+                                </button>
+                                
+                                <div id="format-dropdown-menu" class="hidden absolute right-0 top-full mt-2 w-32 bg-[#111] border border-white/10 rounded-sm shadow-xl z-20 py-1">
+                                    <button class="format-option w-full text-left px-4 py-2 text-xs font-mono transition-colors text-neutral-500 hover:text-white hover:bg-white/5" data-format="json">JSON</button>
+                                    <button class="format-option w-full text-left px-4 py-2 text-xs font-mono transition-colors text-neutral-500 hover:text-white hover:bg-white/5" data-format="xml">XML</button>
+                                    <button class="format-option w-full text-left px-4 py-2 text-xs font-mono transition-colors text-neutral-500 hover:text-white hover:bg-white/5" data-format="yaml">YAML</button>
+                                    <button class="format-option w-full text-left px-4 py-2 text-xs font-mono transition-colors text-neutral-500 hover:text-white hover:bg-white/5" data-format="text">TEXT</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -601,7 +606,41 @@
                 case 'yaml': return `<div class="text-yellow-100 whitespace-pre-wrap">ip: <span class="text-emerald-400">${data.ip}</span>\nisp:\n  asn: <span class="text-emerald-400">${data.isp.asn}</span>\n  org: <span class="text-emerald-400">${data.isp.org}</span>\nlocation:\n  country: <span class="text-emerald-400">${data.location.country}</span>\n  city: <span class="text-emerald-400">${data.location.city}</span></div>`;
                 case 'text': return `<div class="text-neutral-300 whitespace-pre-wrap">${data.ip}</div>`;
                 default: 
-                    return `<div class="text-neutral-300 whitespace-pre-wrap leading-relaxed"><span class="text-neutral-600">{</span><br/><div class="pl-6 border-l border-white/5 ml-1"><span class="text-red-400">"ip"</span>: <span class="text-emerald-400">"${data.ip}"</span>,<br/><span class="text-red-400">"isp"</span>: <span class="text-neutral-600">{</span><div class="pl-6 border-l border-white/5 ml-1"><span class="text-red-400">"asn"</span>: <span class="text-emerald-400">"${data.isp.asn}"</span>,<br/><span class="text-red-400">"org"</span>: <span class="text-emerald-400">"${data.isp.org}"</span></div><span class="text-neutral-600">}</span>,<br/><span class="text-red-400">"location"</span>: <span class="text-neutral-600">{</span><div class="pl-6 border-l border-white/5 ml-1"><span class="text-red-400">"country"</span>: <span class="text-emerald-400">"${data.location.country}"</span>,<br/><span class="text-red-400">"city"</span>: <span class="text-emerald-400">"${data.location.city}"</span>,<br/><span class="text-red-400">"timezone"</span>: <span class="text-emerald-400">"${data.location.timezone}"</span></div><span class="text-neutral-600">}</span>,<br/><span class="text-red-400">"risk"</span>: <span class="text-neutral-600">{</span><div class="pl-6 border-l border-white/5 ml-1"><span class="text-red-400">"is_vpn"</span>: <span class="text-orange-400">${data.risk.is_vpn}</span>,<br/><span class="text-red-400">"risk_score"</span>: <span class="text-blue-400">${data.risk.risk_score}</span></div><span class="text-neutral-600">}</span></div><span class="text-neutral-600">}</span></div>`;
+                    return `<div class="text-neutral-300 whitespace-pre-wrap leading-relaxed"><span class="text-neutral-600">{</span><br/>
+                      <div class="pl-6 border-l border-white/5 ml-1">
+                        <span class="text-red-400">"ip"</span>: <span class="text-emerald-400">"${data.ip}"</span>,<br/>
+                        <span class="text-red-400">"isp"</span>: <span class="text-neutral-600">{</span>
+                        <div class="pl-6 border-l border-white/5 ml-1">
+                          <span class="text-red-400">"asn"</span>: <span class="text-emerald-400">"${data.isp.asn}"</span>,<br/>
+                          <span class="text-red-400">"org"</span>: <span class="text-emerald-400">"${data.isp.org}"</span>,<br/>
+                          <span class="text-red-400">"isp"</span>: <span class="text-emerald-400">"${data.isp.isp}"</span>
+                        </div>
+                        <span class="text-neutral-600">}</span>,<br/>
+                        <span class="text-red-400">"location"</span>: <span class="text-neutral-600">{</span>
+                        <div class="pl-6 border-l border-white/5 ml-1">
+                          <span class="text-red-400">"country"</span>: <span class="text-emerald-400">"${data.location.country}"</span>,<br/>
+                          <span class="text-red-400">"country_code"</span>: <span class="text-emerald-400">"${data.location.country_code}"</span>,<br/>
+                          <span class="text-red-400">"city"</span>: <span class="text-emerald-400">"${data.location.city}"</span>,<br/>
+                          <span class="text-red-400">"state"</span>: <span class="text-emerald-400">"${data.location.state}"</span>,<br/>
+                          <span class="text-red-400">"zipcode"</span>: <span class="text-emerald-400">"${data.location.zipcode}"</span>,<br/>
+                          <span class="text-red-400">"latitude"</span>: <span class="text-blue-400">${data.location.latitude}</span>,<br/>
+                          <span class="text-red-400">"longitude"</span>: <span class="text-blue-400">${data.location.longitude}</span>,<br/>
+                          <span class="text-red-400">"timezone"</span>: <span class="text-emerald-400">"${data.location.timezone}"</span>,<br/>
+                          <span class="text-red-400">"localtime"</span>: <span class="text-emerald-400">"${data.location.localtime}"</span>
+                        </div>
+                        <span class="text-neutral-600">}</span>,<br/>
+                        <span class="text-red-400">"risk"</span>: <span class="text-neutral-600">{</span>
+                        <div class="pl-6 border-l border-white/5 ml-1">
+                          <span class="text-red-400">"is_mobile"</span>: <span class="text-orange-400">${data.risk.is_mobile}</span>,<br/>
+                          <span class="text-red-400">"is_vpn"</span>: <span class="text-orange-400">${data.risk.is_vpn}</span>,<br/>
+                          <span class="text-red-400">"is_tor"</span>: <span class="text-orange-400">${data.risk.is_tor}</span>,<br/>
+                          <span class="text-red-400">"is_proxy"</span>: <span class="text-orange-400">${data.risk.is_proxy}</span>,<br/>
+                          <span class="text-red-400">"is_datacenter"</span>: <span class="text-orange-400">${data.risk.is_datacenter}</span>,<br/>
+                          <span class="text-red-400">"risk_score"</span>: <span class="text-blue-400">${data.risk.risk_score}</span>
+                        </div>
+                        <span class="text-neutral-600">}</span>
+                      </div>
+                    <span class="text-neutral-600">}</span></div>`;
             }
         }
 
@@ -765,7 +804,16 @@
             document.querySelectorAll('.copy-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const targetId = btn.dataset.target;
-                    const text = document.getElementById(targetId).textContent;
+                    let text = '';
+                    
+                    if (targetId === 'hero-response') {
+                        // For hero response, we might need to get text content from the rendered HTML
+                        // But since it's colored spans, textContent works perfectly to get raw JSON text
+                        text = document.getElementById(targetId).textContent;
+                    } else {
+                        text = document.getElementById(targetId).textContent;
+                    }
+                    
                     navigator.clipboard.writeText(text);
                     
                     const icon = btn.querySelector('svg'); // Lucide svg
