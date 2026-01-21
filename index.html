@@ -141,8 +141,8 @@
     <!-- Hero Section -->
     <section class="relative pt-32 pb-24 overflow-hidden border-b border-white/5 bg-[#050505]">
         <!-- Brand Gradients -->
-        <div class="absolute top-0 right-0 -mr-40 -mt-40 w-[600px] h-[600px] bg-red-500/10 rounded-full blur-[130px] -z-10"></div>
-        <div class="absolute bottom-0 left-0 -ml-40 -mb-40 w-[500px] h-[500px] bg-orange-500/10 rounded-full blur-[130px] -z-10"></div>
+        <div class="absolute top-0 right-0 -mr-40 -mt-40 w-[600px] h-[600px] bg-red-600/15 rounded-full blur-[140px] -z-10"></div>
+        <div class="absolute bottom-0 left-0 -ml-40 -mb-40 w-[500px] h-[500px] bg-orange-600/15 rounded-full blur-[140px] -z-10"></div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <div class="space-y-8">
@@ -602,45 +602,52 @@
 
         function renderResponse(format, data = heroData) {
             switch(format) {
-                case 'xml': return `<div class="text-blue-300 whitespace-pre-wrap">&lt;IPInfo&gt;\n  &lt;ip&gt;${data.ip}&lt;/ip&gt;\n  &lt;isp&gt;\n    &lt;asn&gt;${data.isp.asn}&lt;/asn&gt;\n    &lt;org&gt;${data.isp.org}&lt;/org&gt;\n  &lt;/isp&gt;\n  &lt;location&gt;\n    &lt;country&gt;${data.location.country}&lt;/country&gt;\n    &lt;city&gt;${data.location.city}&lt;/city&gt;\n  &lt;/location&gt;\n&lt;/IPInfo&gt;`;
-                case 'yaml': return `<div class="text-yellow-100 whitespace-pre-wrap">ip: <span class="text-emerald-400">${data.ip}</span>\nisp:\n  asn: <span class="text-emerald-400">${data.isp.asn}</span>\n  org: <span class="text-emerald-400">${data.isp.org}</span>\nlocation:\n  country: <span class="text-emerald-400">${data.location.country}</span>\n  city: <span class="text-emerald-400">${data.location.city}</span></div>`;
-                case 'text': return `<div class="text-neutral-300 whitespace-pre-wrap">${data.ip}</div>`;
+                case 'xml': return `<div class="text-blue-300 whitespace-pre font-mono text-xs sm:text-sm">&lt;IPInfo&gt;\n  &lt;ip&gt;${data.ip}&lt;/ip&gt;\n  &lt;isp&gt;\n    &lt;asn&gt;${data.isp.asn}&lt;/asn&gt;\n    &lt;org&gt;${data.isp.org}&lt;/org&gt;\n  &lt;/isp&gt;\n  &lt;location&gt;\n    &lt;country&gt;${data.location.country}&lt;/country&gt;\n    &lt;city&gt;${data.location.city}&lt;/city&gt;\n  &lt;/location&gt;\n&lt;/IPInfo&gt;</div>`;
+                case 'yaml': return `<div class="text-yellow-100 whitespace-pre font-mono text-xs sm:text-sm">ip: <span class="text-emerald-400">${data.ip}</span>\nisp:\n  asn: <span class="text-emerald-400">${data.isp.asn}</span>\n  org: <span class="text-emerald-400">${data.isp.org}</span>\nlocation:\n  country: <span class="text-emerald-400">${data.location.country}</span>\n  city: <span class="text-emerald-400">${data.location.city}</span></div>`;
+                case 'text': return `<div class="text-neutral-300 whitespace-pre font-mono text-xs sm:text-sm">${data.ip}</div>`;
                 default: 
-                    return `<div class="text-neutral-300 whitespace-pre-wrap leading-relaxed"><span class="text-neutral-600">{</span><br/>
-                      <div class="pl-6 border-l border-white/5 ml-1">
-                        <span class="text-red-400">"ip"</span>: <span class="text-emerald-400">"${data.ip}"</span>,<br/>
-                        <span class="text-red-400">"isp"</span>: <span class="text-neutral-600">{</span>
-                        <div class="pl-6 border-l border-white/5 ml-1">
-                          <span class="text-red-400">"asn"</span>: <span class="text-emerald-400">"${data.isp.asn}"</span>,<br/>
-                          <span class="text-red-400">"org"</span>: <span class="text-emerald-400">"${data.isp.org}"</span>,<br/>
-                          <span class="text-red-400">"isp"</span>: <span class="text-emerald-400">"${data.isp.isp}"</span>
-                        </div>
-                        <span class="text-neutral-600">}</span>,<br/>
-                        <span class="text-red-400">"location"</span>: <span class="text-neutral-600">{</span>
-                        <div class="pl-6 border-l border-white/5 ml-1">
-                          <span class="text-red-400">"country"</span>: <span class="text-emerald-400">"${data.location.country}"</span>,<br/>
-                          <span class="text-red-400">"country_code"</span>: <span class="text-emerald-400">"${data.location.country_code}"</span>,<br/>
-                          <span class="text-red-400">"city"</span>: <span class="text-emerald-400">"${data.location.city}"</span>,<br/>
-                          <span class="text-red-400">"state"</span>: <span class="text-emerald-400">"${data.location.state}"</span>,<br/>
-                          <span class="text-red-400">"zipcode"</span>: <span class="text-emerald-400">"${data.location.zipcode}"</span>,<br/>
-                          <span class="text-red-400">"latitude"</span>: <span class="text-blue-400">${data.location.latitude}</span>,<br/>
-                          <span class="text-red-400">"longitude"</span>: <span class="text-blue-400">${data.location.longitude}</span>,<br/>
-                          <span class="text-red-400">"timezone"</span>: <span class="text-emerald-400">"${data.location.timezone}"</span>,<br/>
-                          <span class="text-red-400">"localtime"</span>: <span class="text-emerald-400">"${data.location.localtime}"</span>
-                        </div>
-                        <span class="text-neutral-600">}</span>,<br/>
-                        <span class="text-red-400">"risk"</span>: <span class="text-neutral-600">{</span>
-                        <div class="pl-6 border-l border-white/5 ml-1">
-                          <span class="text-red-400">"is_mobile"</span>: <span class="text-orange-400">${data.risk.is_mobile}</span>,<br/>
-                          <span class="text-red-400">"is_vpn"</span>: <span class="text-orange-400">${data.risk.is_vpn}</span>,<br/>
-                          <span class="text-red-400">"is_tor"</span>: <span class="text-orange-400">${data.risk.is_tor}</span>,<br/>
-                          <span class="text-red-400">"is_proxy"</span>: <span class="text-orange-400">${data.risk.is_proxy}</span>,<br/>
-                          <span class="text-red-400">"is_datacenter"</span>: <span class="text-orange-400">${data.risk.is_datacenter}</span>,<br/>
-                          <span class="text-red-400">"risk_score"</span>: <span class="text-blue-400">${data.risk.risk_score}</span>
-                        </div>
-                        <span class="text-neutral-600">}</span>
-                      </div>
-                    <span class="text-neutral-600">}</span></div>`;
+                    // Structured Block JSON layout
+                    return `
+<div class="text-neutral-300 font-mono text-xs sm:text-sm leading-6 whitespace-nowrap">
+    <div><span class="text-neutral-600">{</span></div>
+    <div class="pl-6 border-l border-white/5 ml-1">
+        <div><span class="text-red-400">"ip"</span>: <span class="text-emerald-400">"${data.ip}"</span>,</div>
+        
+        <div class="flex"><span class="text-red-400">"isp"</span>: <span class="text-neutral-600 ml-1">{</span></div>
+        <div class="pl-6 border-l border-white/5 ml-1">
+            <div><span class="text-red-400">"asn"</span>: <span class="text-emerald-400">"${data.isp.asn}"</span>,</div>
+            <div><span class="text-red-400">"org"</span>: <span class="text-emerald-400">"${data.isp.org}"</span>,</div>
+            <div><span class="text-red-400">"isp"</span>: <span class="text-emerald-400">"${data.isp.isp}"</span></div>
+        </div>
+        <div><span class="text-neutral-600">}</span>,</div>
+
+        <div class="flex"><span class="text-red-400">"location"</span>: <span class="text-neutral-600 ml-1">{</span></div>
+        <div class="pl-6 border-l border-white/5 ml-1">
+            <div><span class="text-red-400">"country"</span>: <span class="text-emerald-400">"${data.location.country}"</span>,</div>
+            <div><span class="text-red-400">"country_code"</span>: <span class="text-emerald-400">"${data.location.country_code}"</span>,</div>
+            <div><span class="text-red-400">"city"</span>: <span class="text-emerald-400">"${data.location.city}"</span>,</div>
+            <div><span class="text-red-400">"state"</span>: <span class="text-emerald-400">"${data.location.state}"</span>,</div>
+            <div><span class="text-red-400">"zipcode"</span>: <span class="text-emerald-400">"${data.location.zipcode}"</span>,</div>
+            <div><span class="text-red-400">"latitude"</span>: <span class="text-blue-400">${data.location.latitude}</span>,</div>
+            <div><span class="text-red-400">"longitude"</span>: <span class="text-blue-400">${data.location.longitude}</span>,</div>
+            <div><span class="text-red-400">"timezone"</span>: <span class="text-emerald-400">"${data.location.timezone}"</span>,</div>
+            <div><span class="text-red-400">"localtime"</span>: <span class="text-emerald-400">"${data.location.localtime}"</span></div>
+        </div>
+        <div><span class="text-neutral-600">}</span>,</div>
+
+        <div class="flex"><span class="text-red-400">"risk"</span>: <span class="text-neutral-600 ml-1">{</span></div>
+        <div class="pl-6 border-l border-white/5 ml-1">
+            <div><span class="text-red-400">"is_mobile"</span>: <span class="text-orange-400">${data.risk.is_mobile}</span>,</div>
+            <div><span class="text-red-400">"is_vpn"</span>: <span class="text-orange-400">${data.risk.is_vpn}</span>,</div>
+            <div><span class="text-red-400">"is_tor"</span>: <span class="text-orange-400">${data.risk.is_tor}</span>,</div>
+            <div><span class="text-red-400">"is_proxy"</span>: <span class="text-orange-400">${data.risk.is_proxy}</span>,</div>
+            <div><span class="text-red-400">"is_datacenter"</span>: <span class="text-orange-400">${data.risk.is_datacenter}</span>,</div>
+            <div><span class="text-red-400">"risk_score"</span>: <span class="text-blue-400">${data.risk.risk_score}</span></div>
+        </div>
+        <div><span class="text-neutral-600">}</span></div>
+    </div>
+    <div><span class="text-neutral-600">}</span></div>
+</div>`;
             }
         }
 
